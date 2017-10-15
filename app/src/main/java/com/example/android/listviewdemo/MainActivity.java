@@ -7,33 +7,66 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.SeekBar;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
+    ListView listView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ListView listView = (ListView)findViewById(R.id.listView);
-        final ArrayList<String> myFamily = new ArrayList<String>();
-        myFamily.add("Hina");
-        myFamily.add("Beena");
-        myFamily.add("Hemant");
-        myFamily.add("Hardik");
+        listView = (ListView)findViewById(R.id.listView);
+        SeekBar seekbar = (SeekBar)findViewById(R.id.seekBar);
+        seekbar.setMax(20);
+        seekbar.setProgress(5);
 
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,myFamily);
-        listView.setAdapter(arrayAdapter);
+        generateTable(5);
 
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.i(myFamily.get(position),"true");
-                Toast.makeText(getApplicationContext(),"Hello "+myFamily.get(position),Toast.LENGTH_SHORT).show();
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                int min=1;
+                int timesTable;
+                if(progress<1)
+                {
+                    timesTable=min;
+                    seekBar.setProgress(min);
+                }else
+                    timesTable=progress;
+                generateTable(timesTable);
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
             }
         });
+
+
+
+
+    }
+
+    public void generateTable(int number)
+    {
+        ArrayList<String> tables = new ArrayList<String>();
+        for(int i=1;i<=10;i++)
+        {
+            tables.add(Integer.toString(i*number));
+
+        }
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,tables);
+        listView.setAdapter(arrayAdapter);
+
     }
 }
